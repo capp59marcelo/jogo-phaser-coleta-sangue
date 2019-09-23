@@ -10,7 +10,7 @@ SideScroller.Boot.prototype = {
   },
   create: function() {
     //loading screen will have a white background
-    this.game.stage.backgroundColor = '#fff';
+    this.game.stage.backgroundColor = '#105862';
 
     //scaling options
  //   this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
