@@ -8,4 +8,7 @@ SideScroller.game.state.add('Game', SideScroller.Game);
 
 SideScroller.game.state.start('Boot');
 
-document.getElementById("maiorPontuacao").innerHTML = localStorage.getItem("maiorPontuacao");
+
+var maiorPontuacao = JSON.parse(localStorage.getItem("maiorPontuacao"));
+document.getElementById("pontos").innerHTML = maiorPontuacao.pontos ;
+document.getElementById("nome").innerHTML = maiorPontuacao.nome ;

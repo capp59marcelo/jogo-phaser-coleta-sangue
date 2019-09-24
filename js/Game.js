@@ -263,7 +263,8 @@ SideScroller.Game.prototype = {
     if( this.score > localStorage.getItem("maiorPontuacao") )
     {
       document.getElementById("maiorPontuacao").innerHTML = this.score;
-      localStorage.setItem("maiorPontuacao", this.score);
+
+      localStorage.setItem("maiorPontuacao", JSON.stringify({nome: localStorage.getItem("playerName"), pontos:this.score }));
     }
    
   },

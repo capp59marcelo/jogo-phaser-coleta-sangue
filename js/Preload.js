@@ -1,10 +1,10 @@
 var SideScroller = SideScroller || {};
 
 //loading the game assets
-SideScroller.Preload = function(){};
+SideScroller.Preload = function () { };
 
 SideScroller.Preload.prototype = {
-  preload: function() {
+  preload: function () {
     //show loading screen
     this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'preloadbar');
     this.preloadBar.anchor.setTo(0.5);
@@ -21,7 +21,14 @@ SideScroller.Preload.prototype = {
     this.load.image('yellowBlock', 'assets/images/yellow-block.png');
     this.load.audio('coin', 'assets/audio/coin.wav');
   },
-  create: function() {
+  create: function () {
+    
+    var nome;
+    do {
+      nome = prompt("Por favor digite seu lindo nome");
+    } while (nome == null || nome == "");
+
+    localStorage.setItem("playerName", nome);
     this.state.start('Game');
   }
 };
