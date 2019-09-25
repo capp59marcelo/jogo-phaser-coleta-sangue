@@ -26,13 +26,12 @@ SideScroller.Game.prototype = {
     this.floors = this.game.add.group();
     this.floors.enableBody = true;
 
-    for (var i = 0; i < 12; i++)
-    {
+    for (var i = 0; i < 12; i++) {
       //cria o chao
       let newItem = this.floors.create(i * this.tileSize, this.game.world.height - this.tileSize, 'floor');
       newItem.body.immovable = true;
       newItem.body.velocity.x = this.levelSpeed;        //faz o chao se mover 
-      this.lastFloor = newItem;       
+      this.lastFloor = newItem;
     }
 
 
@@ -65,9 +64,9 @@ SideScroller.Game.prototype = {
   },
   update: function () {
     //collision
-    this.game.physics.arcade.collide(this.player, this.floors, this.playerHit, null, this);
+    this.game.physics.arcade.collide(this.player, this.floors, this.playerCaiuDoChao, null, this);
     this.game.physics.arcade.collide(this.player, this.inimigosGlobuloBranco, this.playerTocouInimigoGlobuloBranco, null, this);
-    this.game.physics.arcade.overlap(this.player, this.bolsasDeSangue, this.bateu, null, this);
+    this.game.physics.arcade.overlap(this.player, this.bolsasDeSangue, this.coletouBolsaSangue, null, this);
 
     //only respond to keys and keep the speed if the player is alive
     if (this.player.alive) {
@@ -157,11 +156,25 @@ SideScroller.Game.prototype = {
       }
     }
   },
-  bateu: function (player, coin) {
+  coletouBolsaSangue: function (player, coin) {
     coin.destroy();
     console.log("aaaaaaaaaaa");
-    this.score += 10;
+    this.score ++;
     this.scoreText.setText('Score: ' + this.score);
+  },
+  playerCaiuDoChao: function (player, chao) {
+    //if hits on the right side, die
+    if (player.body.touching.right) {
+      //set to dead (this doesn't affect rendering)
+      this.player.alive = false;
+      //stop moving to the right
+      this.player.body.velocity.x = 0;
+      //change sprite image
+      this.player.loadTexture('playerDead');
+      //alert("aqui é quando ele morre");
+      //go to gameover after a few miliseconds
+      this.game.time.events.add(200, this.gameOver, this);
+    }
   }
   ,
   playerTocouInimigoGlobuloBranco: function (player, globuloBranco) {
@@ -178,10 +191,9 @@ SideScroller.Game.prototype = {
       this.player.loadTexture('playerDead');
 
       this.scoreText.setText(' ');
-      
-      this.resultText = this.add.text(50, 100, '', { fontSize: '32px', fill: '#ffff' });
-      this.resultText.setText('Você coletou ' + this.score + ' bolsa de sangue e salvou '+this.score*3+' vidas\n A cada bolsa coletada você pode salvar 3 vidas');
-     
+
+
+
       //alert("aqui é quando ele morre");
       //go to gameover after a few miliseconds
       this.game.time.events.add(200, this.gameOver, this);
@@ -193,12 +205,23 @@ SideScroller.Game.prototype = {
     }
   },
   gameOver: function () {
-    this.game.state.start('Boot');
+
     if (this.score > localStorage.getItem("maiorPontuacao")) {
       document.getElementById("maiorPontuacao").innerHTML = this.score;
 
       localStorage.setItem("maiorPontuacao", JSON.stringify({ nome: localStorage.getItem("playerName"), pontos: this.score }));
     }
+
+    gameOver
+
+    document.getElementById('gameOver').style.display = 'flex';
+    document.getElementById('gameOver').innerHTML = `
+          <h2>você coletou ${this.score} bolsa de sangue e salvou ${this.score * 3} vidas\n A cada bolsa coletada você pode salvar 3 vidas</h2>
+          <button onclick='jogarNovamente()'>JOGAR NOVAMENTE</button>
+          `;
+
+    //this.game.state.start('Boot');
+    this.game.paused = true;
 
   },
   playerJump: function () {
@@ -215,5 +238,8 @@ SideScroller.Game.prototype = {
 
     //we use this to keep track whether it's ducked or not
     this.player.isDucked = true;
+  },
+  jogarNovamente: function () {
+    this.game.state.start('Boot');
   }
 };

@@ -1,31 +1,74 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8" />
-		<title>Coleta De Sangue</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<script type="text/javascript" src="js/gamecontroller.js"></script>
-		<script type="text/javascript" src="js/phaser.min.js"></script>
-		<script type="text/javascript" src="js/Boot.js"></script>
-		<script type="text/javascript" src="js/Preload.js"></script>
-		<script type="text/javascript" src="js/Game.js"></script>
+<head>
+	<meta charset="utf-8" />
+	<title>Coleta De Sangue</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<script type="text/javascript" src="js/gamecontroller.js"></script>
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+	<script type="text/javascript" src="js/Boot.js"></script>
+	<script type="text/javascript" src="js/Preload.js"></script>
+	<script type="text/javascript" src="js/Game.js"></script>
 
-		<style>
-		  body {
-		    padding: 0px;
-		    margin: 0px;
-		  }
-		  </style>
-	</head>
+	<style>
+		body {
+			padding: 0px;
+			margin: 0px;
+		}
 
-	<body>
-		<div>Maior Pontuação: <span id="pontos">0</span> Foi de : <span id="nome"></span></div>
-		<!-- include the main game file -->
-		
-		<script src="js/main.js"></script>
+		#gameOver {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: #131313e3;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			display: none;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
 
-	</body>
+		#gameOver>h2 {
+			text-align: center;
+			color: #fff;
+			max-width: 650px;
+		}
+
+		#gameOver>button {
+			border-radius: 10px;
+			padding: 20px;
+			background-color: #105862;
+			color: #fff;
+			font-size: 18px;
+			cursor: pointer;
+		}
+		#gameOver>button:hover {
+			border-radius: 10px;
+			padding: 20px;
+			background-color: #0c3f46;
+			font-size: 20px;
+
+		}
+	</style>
+</head>
+
+<body>
+	<div>Maior Pontuação: <span id="pontos">0</span> Foi de : <span id="nome"></span></div>
+	<!-- include the main game file -->
+
+	<div id="gameOver">
+
+	</div>
+
+
+	<script src="js/main.js"></script>
+
+</body>
+
 </html>

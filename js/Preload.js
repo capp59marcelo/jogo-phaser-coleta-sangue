@@ -24,12 +24,12 @@ SideScroller.Preload.prototype = {
   },
   create: function () {
     
-    // var nome;
-    // do {
-    //   nome = prompt("Por favor digite seu lindo nome");
-    // } while (nome == null || nome == "");
+    var nome;
+    do {
+      nome = prompt("Por favor digite seu lindo nome");
+    } while (nome == null || nome == "");
 
-    // localStorage.setItem("playerName", nome);
+    localStorage.setItem("playerName", nome);
     this.state.start('Game');
   }
 };
