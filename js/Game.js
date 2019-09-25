@@ -19,6 +19,8 @@ SideScroller.Game.prototype = {
     this.score = 0;
     this.scoreText = null;
 
+    this.resultText = null;
+
     this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //initiate groups, we'll recycle elements
@@ -90,7 +92,7 @@ SideScroller.Game.prototype = {
   bateu: function (player, coin) {
     coin.destroy();
     console.log("aaaaaaaaaaa");
-    this.score += 10;
+    this.score += 1;
     this.scoreText.setText('Score: ' + this.score);
   }
   ,
@@ -202,6 +204,12 @@ SideScroller.Game.prototype = {
 
       //change sprite image
       this.player.loadTexture('playerDead');
+
+      this.scoreText.setText(' ');
+      
+      this.resultText = this.add.text(50, 100, '', { fontSize: '32px', fill: '#ffff' });
+      this.resultText.setText('Você coletou ' + this.score + ' bolsa de sangue e salvou '+this.score*3+' vidas\n A cada bolsa coletada você pode salvar 3 vidas');
+     
       //alert("aqui é quando ele morre");
       //go to gameover after a few miliseconds
       this.game.time.events.add(200, this.gameOver, this);
