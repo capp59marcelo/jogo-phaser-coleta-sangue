@@ -7,7 +7,6 @@ SideScroller.Game.prototype = {
     this.game.time.advancedTiming = true;
   },
   create: function () {
-    var newItem;
 
     //game params
     this.levelSpeed = -250;
@@ -25,43 +24,32 @@ SideScroller.Game.prototype = {
     this.floors = this.game.add.group();
     this.floors.enableBody = true;
 
-    for (var i = 0; i < 12; i++) {
+    for (var i = 0; i < 12; i++)
+    {
       //cria o chao
-      newItem = this.floors.create(i * this.tileSize, this.game.world.height - this.tileSize, 'floor');
+      let newItem = this.floors.create(i * this.tileSize, this.game.world.height - this.tileSize, 'floor');
       newItem.body.immovable = true;
-      newItem.body.velocity.x = this.levelSpeed;        //faz o chao se mover        
+      newItem.body.velocity.x = this.levelSpeed;        //faz o chao se mover 
+      this.lastFloor = newItem;       
     }
 
-    //keep track of the last floor
-    this.lastFloor = newItem;
 
     //keep track of the last element
     this.lastCliff = false;
     this.lastVertical = false;
 
-    this.verticalObstacles = this.game.add.group();
-    this.verticalObstacles.enableBody = true;
-    this.verticalObstacles.createMultiple(50, 'yellowBlock');
-    this.verticalObstacles.setAll('checkWorldBounds', true);
-    this.verticalObstacles.setAll('outOfBoundsKill', true);
+    this.inimigosGlobuloBranco = this.game.add.group();
+    this.inimigosGlobuloBranco.enableBody = true;
+    this.inimigosGlobuloBranco.createMultiple(50, 'inimigoGlobuloBranco');
 
-    for (var i = 0; i < 12; i++) {
-      newItem = this.verticalObstacles.create(null, this.game.world.height - this.tileSize, 'floor');
-      newItem.body.immovable = true;
-      newItem.body.velocity.x = this.levelSpeed;
-    }
-
-
-    this.coins = this.game.add.group();
-    this.coins.enableBody = true;
-    this.coins.createMultiple(50, 'goldCoin');
-    this.coins.setAll('checkWorldBounds', true);
-    this.coins.setAll('outOfBoundsKill', true);
+    this.bolsasDeSangue = this.game.add.group();
+    this.bolsasDeSangue.enableBody = true;
+    this.bolsasDeSangue.createMultiple(50, 'bolsaDesangue');
 
 
     //create player
     this.player = this.game.add.sprite(250, 120, 'player'); //controla posicao que personagem nasce
-    // /this.player.scale.setTo(0.8);
+    this.player.scale.setTo(0.8);
 
     //enable physics on the player
     this.game.physics.arcade.enable(this.player);
@@ -69,38 +57,15 @@ SideScroller.Game.prototype = {
     //player gravity
     this.player.body.gravity.y = 1500;
 
-    //properties when the player is ducked and standing, so we can use in update()
-    var playerDuckImg = this.game.cache.getImage('playerDuck');
-    this.player.duckedDimensions = { width: playerDuckImg.width, height: playerDuckImg.height };
-    this.player.standDimensions = { width: this.player.width, height: this.player.height };
-    this.player.anchor.setTo(0.5, 1);
-
-    //the camera will follow the player in the world
-    this.game.camera.follow(this.player);
-
     //move player with cursor keys
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
-    //init game controller
-    this.initGameController();
-
-    //sounds
-    this.coinSound = this.game.add.audio('coin');
   },
-  bateu: function (player, coin) {
-    coin.destroy();
-    console.log("aaaaaaaaaaa");
-    this.score += 10;
-    this.scoreText.setText('Score: ' + this.score);
-  }
-  ,
-
   update: function () {
     //collision
     this.game.physics.arcade.collide(this.player, this.floors, this.playerHit, null, this);
-    this.game.physics.arcade.collide(this.player, this.verticalObstacles, this.playerHit, null, this);
-    this.game.physics.arcade.overlap(this.player, this.coins, this.bateu, null, this);
-    //this.game.physics.arcade.overlap(this.player, this.coins, this.collect, null, this);
+    this.game.physics.arcade.collide(this.player, this.inimigosGlobuloBranco, this.playerTocouInimigoGlobuloBranco, null, this);
+    this.game.physics.arcade.overlap(this.player, this.bolsasDeSangue, this.bateu, null, this);
 
     //only respond to keys and keep the speed if the player is alive
     if (this.player.alive) {
@@ -153,8 +118,8 @@ SideScroller.Game.prototype = {
         else if (Math.random() < this.probVertical && !this.lastCliff) {
           this.lastCliff = false;
           this.lastVertical = true;
-          block = this.verticalObstacles.getFirstExists(false);
-          teste = this.coins.getFirstExists(false);
+          block = this.inimigosGlobuloBranco.getFirstExists(false);
+          teste = this.bolsasDeSangue.getFirstExists(false);
           //controla a altura dos objetos blocos de caixa
           block.reset(this.lastFloor.body.x + this.tileSize, this.game.world.height - 2 * this.tileSize);
           teste.reset(this.lastFloor.body.x + this.tileSize, this.game.world.height - 3 * this.tileSize);
@@ -165,7 +130,7 @@ SideScroller.Game.prototype = {
           teste.body.immovable = true;
 
           if (Math.random() < this.probMoreVertical) {
-            block = this.verticalObstacles.getFirstExists(false);
+            block = this.inimigosGlobuloBranco.getFirstExists(false);
             teste
             if (block) {
               block.reset(this.lastFloor.body.x + this.tileSize, this.game.world.height - 4 * this.tileSize);
@@ -190,7 +155,14 @@ SideScroller.Game.prototype = {
       }
     }
   },
-  playerHit: function (player, blockedLayer) {
+  bateu: function (player, coin) {
+    coin.destroy();
+    console.log("aaaaaaaaaaa");
+    this.score += 10;
+    this.scoreText.setText('Score: ' + this.score);
+  }
+  ,
+  playerTocouInimigoGlobuloBranco: function (player, globuloBranco) {
     //if hits on the right side, die
     if (player.body.touching.right) {
 
@@ -208,65 +180,18 @@ SideScroller.Game.prototype = {
 
 
     }
-  },
-  collect: function (player, collectable) {
-    //play audio
-    this.coinSound.play();
-
-    //remove sprite
-    collectable.destroy();
-  },
-  initGameController: function () {
-
-    if (!GameController.hasInitiated) {
-      var that = this;
-
-      GameController.init({
-        right: {
-          type: 'none',
-        },
-        left: {
-          type: 'buttons',
-          buttons: [
-            false,
-            {
-              label: 'J',
-              touchStart: function () {
-                if (!that.player.alive) {
-                  return;
-                }
-                that.playerJump();
-              }
-            },
-            false,
-            {
-              label: 'D',
-              touchStart: function () {
-                if (!that.player.alive) {
-                  return;
-                }
-                that.pressingDown = true; that.playerDuck();
-              },
-              touchEnd: function () {
-                that.pressingDown = false;
-              }
-            }
-          ]
-        },
-      });
-      GameController.hasInitiated = true;
+    if (player.body.touching.down) {
+      globuloBranco.destroy();
     }
-
   },
   gameOver: function () {
     this.game.state.start('Boot');
-    if( this.score > localStorage.getItem("maiorPontuacao") )
-    {
+    if (this.score > localStorage.getItem("maiorPontuacao")) {
       document.getElementById("maiorPontuacao").innerHTML = this.score;
 
-      localStorage.setItem("maiorPontuacao", JSON.stringify({nome: localStorage.getItem("playerName"), pontos:this.score }));
+      localStorage.setItem("maiorPontuacao", JSON.stringify({ nome: localStorage.getItem("playerName"), pontos: this.score }));
     }
-   
+
   },
   playerJump: function () {
     if (this.player.body.touching.down) {
