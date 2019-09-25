@@ -52,6 +52,12 @@ SideScroller.Game.prototype = {
     this.player = this.game.add.sprite(250, 120, 'player'); //controla posicao que personagem nasce
     this.player.scale.setTo(0.8);
 
+    //properties when the player is ducked and standing, so we can use in update()
+    var playerDuckImg = this.game.cache.getImage('playerDuck');
+    this.player.duckedDimensions = { width: playerDuckImg.width, height: playerDuckImg.height };
+    this.player.standDimensions = { width: this.player.width, height: this.player.height };
+    this.player.anchor.setTo(0.5, 1);
+
     //enable physics on the player
     this.game.physics.arcade.enable(this.player);
 
@@ -159,7 +165,7 @@ SideScroller.Game.prototype = {
   coletouBolsaSangue: function (player, coin) {
     coin.destroy();
     console.log("aaaaaaaaaaa");
-    this.score ++;
+    this.score++;
     this.scoreText.setText('Score: ' + this.score);
   },
   playerCaiuDoChao: function (player, chao) {
