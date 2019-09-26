@@ -10,8 +10,16 @@ SideScroller.game.state.start('Boot');
 
 
 var maiorPontuacao = JSON.parse(localStorage.getItem("maiorPontuacao"));
-document.getElementById("pontos").innerHTML = maiorPontuacao.pontos;
-document.getElementById("nome").innerHTML = maiorPontuacao.nome;
+
+if (maiorPontuacao != null) {
+    document.getElementById("pontos").innerHTML = maiorPontuacao.pontos;
+    document.getElementById("nome").innerHTML = maiorPontuacao.nome;
+}
+else{
+    localStorage.setItem("maiorPontuacao", JSON.stringify({ nome: "", pontos: 0 }));
+
+}
+
 
 
 function jogarNovamente() {

@@ -212,13 +212,13 @@ SideScroller.Game.prototype = {
   },
   gameOver: function () {
 
-    if (this.score > localStorage.getItem("maiorPontuacao")) {
-      document.getElementById("maiorPontuacao").innerHTML = this.score;
-
-      localStorage.setItem("maiorPontuacao", JSON.stringify({ nome: localStorage.getItem("playerName"), pontos: this.score }));
+    var maiorPontuacao = JSON.parse(localStorage.getItem("maiorPontuacao"));
+    console.log("maiorpon"+ maiorPontuacao);
+    if (maiorPontuacao != null) {
+      if (this.score > maiorPontuacao.pontos) {
+        localStorage.setItem("maiorPontuacao", JSON.stringify({ nome: localStorage.getItem("playerName"), pontos: this.score }));
+      }
     }
-
-    gameOver
 
     document.getElementById('gameOver').style.display = 'flex';
     document.getElementById('gameOver').innerHTML = `
